@@ -1,4 +1,5 @@
 const Visitor = require("../models/Visitor");
+const { options } = require("../routes/authRoutes");
 
 exports.createVisitor = async (visitorData) => {
   return await Visitor.create(visitorData);
@@ -26,3 +27,15 @@ exports.updateVisitor = async (id, visitorData) => {
 exports.deleteVisitor = async (id) => {
   return await Visitor.findByIdAndDelete(id);
 };
+
+ exports. searchVisitor = async (keyword) => {
+  return await Visitor.find({
+    $or: [
+      { fullName: { $regex: keyword, options: "i" } },
+      { email: { $regex: keyword, options: "i" } },
+      { phone: { $regex: keyword, options: "i" } },
+      { address: { $regex: keyword, options: "i" } },
+      { company: { $regex: keyword, options: "i" } },
+    ]
+  })
+}

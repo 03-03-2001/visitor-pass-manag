@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const authMiddleware = require("../middlewares/authMiddleware");
 
 const getUserByEmail = async(email)=>{
    return await User.findOne(email);   
