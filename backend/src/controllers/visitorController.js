@@ -1,22 +1,24 @@
+
 const visitorService = require('../services/visitorService');
 
 const createVisitor = async(req,res)=>{
    try {
       const visitorData = {
         ...req.body,
-        createdBy = req.uer._id, 
+        createdBy : req.user._id, 
     }
 
       const visitor =  await visitorService.createVisitor(visitorData);
 
       res.status(201).json({
         success:true,
-        message:"Visitor are successfully created"
+        message:"Visitor are successfully created",
+        data:visitor
       });
 
 
    } catch (error) {
-     res.status(500).json({
+     return  res.status(500).json({
         success:false,
         message: error.message
      })
@@ -45,7 +47,7 @@ const getVisitorById = async(req,res)=>{
         const visitor = await visitorService.getVisitorById(req.params.id);
 
         if(!visitor){
-            res.status(404).json({
+           return res.status(404).json({
                 success:false,
                 message:'Visitor Not Found'
             })
@@ -72,7 +74,7 @@ const updateVisitor = async(req,res)=>{
         );
 
         if(!visitor){
-            res.status(404).json({
+           return res.status(404).json({
                 success:false,
                 message:'Visitor Not Found'
             })
@@ -96,7 +98,7 @@ const deleteVisitor =async (req,res)=>{
      try {
         const visitor = await visitorService.deleteVisitor(req.params.id);
         if(!visitor){
-            res.status(404).json({
+           return res.status(404).json({
                 success:false,
                 message:"Visitor Not Found"
             })

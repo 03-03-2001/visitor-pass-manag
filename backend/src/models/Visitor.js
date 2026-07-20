@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { type } = require("node:os");
+
 
 const visitorSchema = new  mongoose.Schema({
      fullName:{
@@ -21,20 +21,20 @@ const visitorSchema = new  mongoose.Schema({
         require:true
      },
      company:{
-        type:string
+        type:String
      },
      photo:{
-        type:string,
+        type:String,
         default:""
      },
      idProof:{
-        type:string,
+        type:String,
         default:""
      },
-     createBy:{
+     createdBy:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:User,
-        require:true
+        ref:"User",
+        required:true
      },
 
 },{

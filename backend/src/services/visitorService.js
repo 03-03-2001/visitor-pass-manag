@@ -1,5 +1,5 @@
 const Visitor = require("../models/Visitor");
-const { options } = require("../routes/authRoutes");
+
 
 exports.createVisitor = async (visitorData) => {
   return await Visitor.create(visitorData);

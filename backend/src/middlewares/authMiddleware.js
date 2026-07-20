@@ -4,8 +4,8 @@ const User = require('../models/User');
 
 const authMiddleware = async(req,res,next)=>{
        try {
-            const authHeader = req.header.authorization;
-            if(!authHeader || authHeader.startWith("Bearer")){
+            const authHeader = req.headers.authorization;
+            if(!authHeader || !authHeader.startsWith("Bearer ")){
                 return res.status(401).json({
                     success:false,
                     message:"Access is Denied, no token provide"
