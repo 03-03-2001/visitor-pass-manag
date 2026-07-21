@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const visitorSchema = new  mongoose.Schema({
      fullName:{
         type:String,
-        require:true,
+        required:true,
         trim:true
      },
      email:{
@@ -14,11 +14,11 @@ const visitorSchema = new  mongoose.Schema({
      },
      phone:{
         type:String,
-        require:true
+        required:true
      },
      address:{
         type:String,
-        require:true
+        required:true
      },
      company:{
         type:String

@@ -31,11 +31,11 @@ exports.deleteVisitor = async (id) => {
  exports. searchVisitor = async (keyword) => {
   return await Visitor.find({
     $or: [
-      { fullName: { $regex: keyword, options: "i" } },
-      { email: { $regex: keyword, options: "i" } },
-      { phone: { $regex: keyword, options: "i" } },
-      { address: { $regex: keyword, options: "i" } },
-      { company: { $regex: keyword, options: "i" } },
+      { fullName: { $regex: keyword, $options: "i" } },
+      { email: { $regex: keyword, $options: "i" } },
+      { phone: { $regex: keyword, $options: "i" } },
+      { address: { $regex: keyword, $options: "i" } },
+      { company: { $regex: keyword, $options: "i" } },
     ]
   })
 }
