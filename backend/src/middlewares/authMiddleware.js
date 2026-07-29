@@ -12,12 +12,14 @@ const authMiddleware = async(req,res,next)=>{
                 })
             };
             const token = authHeader.split(" ")[1];
-            
+            console.log("Token",token);
           
              
             const decoded = jwt.verify(token,process.env.JWT_SECRET);
+            console.log("Decoded",decoded);
 
             const user = await User.findById(decoded.id).select("-password");
+            console.log("User",user);
 
             if(!user){
                 return res.status(401).json({

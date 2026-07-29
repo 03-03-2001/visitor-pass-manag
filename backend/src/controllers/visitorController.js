@@ -25,6 +25,11 @@ const createVisitor = async(req,res)=>{
    }
 }
 
+
+
+
+
+
 const getAllVisitors = async(req,res)=>{
    try {
        const visitors = await visitorService.getAllVisitors();

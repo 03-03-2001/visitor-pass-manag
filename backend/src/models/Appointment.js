@@ -3,7 +3,7 @@ const Visitor = require("./Visitor");
 const { type } = require("node:os");
 
 const appointmentSchema = new  mongoose.Schema({
-    Visitor:{
+    visitor:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Visitor",
         required:true

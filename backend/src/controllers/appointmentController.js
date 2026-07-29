@@ -80,7 +80,7 @@ const updateAppointment = async(req,res)=>{
         res.status(200).json({
             success:true,
             message:"Appointment is Update Successfully ",
-            data:Appointment
+            data:appointment
         })
      } catch (error) {
         res.status(500).json({
@@ -147,7 +147,7 @@ const rejectAppointment = async(req,res)=>{
     try {
         const {remarks} = req.body;
 
-        const appointment = await appointmentServices.rejectAppointment(
+        const appointment = await appointmentService.rejectAppointment(
             req.params.id,
              remarks
         );
@@ -176,7 +176,7 @@ const searchAppointment = async(req,res)=>{
     try {
          const {keyword} = req.query;
 
-         const appointment = await appointmentServices.searchAppointment(keyword || "");
+         const appointment = await appointmentService.searchAppointment(keyword || "");
 
         res.status(200).json({
             success:true,

@@ -5,9 +5,19 @@ const authMiddleware = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
+console.log({
+  createVisitor: typeof visitorController.createVisitor,
+  getAllVisitors: typeof visitorController.getAllVisitors,
+  searchVisitor: typeof visitorController.searchVisitor,
+  getVisitorById: typeof visitorController.getVisitorById,
+  updateVisitor: typeof visitorController.updateVisitor,
+  deleteVisitor: typeof visitorController.deleteVisitor,
+});
 
 router.post('/', authMiddleware, visitorController.createVisitor);
 router.get('/',visitorController.getAllVisitors);
+
+
 
 //serch visitor
 
