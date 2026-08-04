@@ -6,6 +6,7 @@ const visitorRoutes = require('../src/routes/visitorRoutes');
 const appointmentRoutes = require('../src/routes/appointmentRoutes');
 const passRoutes = require('../src/routes/passRoutes');
 const testRoutes = require("../src/routes/testRoutes");
+const cheakLogRoutes = require("./routes/cheakLogRoutes");
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/appointments", appointmentRoutes)
 app.use('/passes',passRoutes);
 console.log("✅ app.js loaded");
 app.use("/test",testRoutes);
+app.use("/cheakLogs", cheakLogRoutes);
 
 
 app.get('/',(req,res)=>{

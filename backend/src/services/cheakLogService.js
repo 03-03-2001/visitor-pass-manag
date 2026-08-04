@@ -3,7 +3,12 @@ const Pass = require("../models/Pass");
 
 
 exports.createCheakIn = async (passNumber,securityOfficer) => {
-   const pass = await Pass.findOne({passNumber}).populate("visitor");
+   const pass = await Pass.findOne({passNumber});
+
+
+    console.log("PASS =", pass);
+    console.log("VISITOR =", pass?.visitor);
+    console.log("SECURITY =", securityOfficer);
 
    if(!pass){
     throw new Error ("Pass not Found")
@@ -27,7 +32,7 @@ exports.createCheakIn = async (passNumber,securityOfficer) => {
 
     const cheakLog = await CheakLog.create({
         pass:pass._id,
-        visitor: pass.visitor._id,
+        visitor: pass.visitor,
         securityOfficer,
         cheakInTime:new Date()
 
@@ -68,11 +73,12 @@ exports.createCheakOut = async(passNumber)=>{
 }
 
 
-exports.getAllPasses = async () => {
-    return await Pass.find()
-        .populate("visitor", "fullName email phone")
-        .populate("appointment")
-        .populate("createdBy", "name email role")
+exports.getAllCheakLogs = async () => {
+    return await CheakLog.find()
+        .populate("pass")
+        .populate("visitor")
+        .populate("securityOfficer", "name email")
+        sort({createdAt:-1})
 };
 
 
@@ -80,24 +86,27 @@ exports.getAllPasses = async () => {
 
 
 
-exports.getPassById = async (id) => {
-    return await Pass.findById(id)
-        .populate("visitor", "fullName email phone")
-        .populate("appointment")
-        .populate("createdBy", "name email role");
+exports.getCheakLogById = async (id) => {
+    return await CheakLog.findById(id)
+        .populate("pass")
+        .populate("visitor")
+        .populate("securityStaff", "name email");
 };
 
 
-exports.updatePass = async (id, passData) => {
-    return await Pass.findByIdAndUpdate(id, passData, {
+exports.updateCheakLog = async (id, data) => {
+    return await CheakLog.findByIdAndUpdate(id, data, {
         new: true,
         runValidators: true,
-    });
+    })
+    .populate("pass")
+    .populate("visitor")
+    .populate("securityStaff","name email")
 };
 
 
-exports.deletePass = async (id) => {
-    return await Pass.findByIdAndDelete(id);
+exports.deleteCheakLog = async (id) => {
+    return await CheakLog.findByIdAndDelete(id);
 };
 
 
@@ -105,38 +114,106 @@ exports.deletePass = async (id) => {
 
 
 
-exports.searchPass = async (keyword) => {
-    return await Pass.find({
+exports.searchCheakLogs = async (keyword) => {
+    return await CheakLog.find({
         $or: [
-            { passNumber: { $regex: keyword, $options: "i" } },
-            { status: { $regex: keyword, $options: "i" } }
+            { status: { $regex: keyword, $options: "i" } },
+            { remarks: { $regex: keyword, $options: "i" } }
         ],
     })
-        .populate("visitor", "fullName email phone")
-        .populate("appointment")
-        .populate("createdBy", "name email role")
+        .populate("pass")
+        .populate("visitor")
+        .populate("securityStaff", "name email")
 }
 
-exports.getPassByNumber = async (passNumber) => {
-    return await Pass.findOne({ passNumber })
-        .populate("visitor", "fullName email,phone")
-        .populate("appointment")
-        .populate("createdBy", "name email role")
+
+exports.getTodayLogs = async () => {
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+
+    console.log("start",start);
+    console.log("end",end);
+
+    return await CheakLog.find({
+        cheakInTime: {
+            $gte: start,
+            $lte: end
+        },
+         
+                cheakOutTime: {
+                    $gte: start,
+                    $lte: end
+                }
+            
+    })
+    .populate("pass")
+    .populate("visitor")
+    .populate("securityOfficer", "name email")
+    .sort({ cheakInTime: -1 });
 };
-//get Active Passes
-exports.getActivePasses = async () => {
-    return await Pass.find({ status: "Active" })
-        .populate("visitor", "fullName email phone")
-        .populate("appointment")
-        .populate("createdBy", "name email role")
-};
 
 
-//get expired Passes
+//cheakIn
 
-exports.getExpiredPasses = async () => {
-    return await Pass.find({ status: "Expired" })
-        .populate("visitor", "fullName email phone")
-        .populate("appointment")
-        .populate("createdBy", "name email role")
+exports.cheakInVisitor = async(passId,securityStaffId)=>{
+        const pass = await Pass.findById({passId})
+
+        if(!pass){
+            throw new Error("Pass not found")
+        }
+
+        if(pass.status === "Checked-In"){
+            throw new Error("visitor already cheaked-in");
+        }
+
+        pass.status = "Checked-In"
+        await pass.save();
+
+        return cheakLog.create({
+            pass:pass._id,
+            visitor:pass.visitor,
+            securityStaff: securityStaffId,
+            cheakInTime:new Date(),
+            status:"Cheaked-In"
+
+        })
 }
+
+
+exports.cheakOutVisitor = async(passId)=>{
+      const pass = await Pass.findById(passId);
+
+      if(!pass){
+        throw new Error("Pass not found")
+      }
+
+      const log = await CheakLog.findOne({
+        pass:passId,
+        status:"Cheaked-In"
+      });
+
+      if(!log){
+        throw new Error("Cheak-In record not found")
+      }
+
+      log.cheakOutTime = new Date();
+      log.status = "Cheaked-Out";
+      await log.save();
+
+
+      pass.status = "Cheaked-Out";
+      await pass.save();
+
+      return log;
+
+}
+
+
+
+
+
+
+
