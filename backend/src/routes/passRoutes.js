@@ -8,6 +8,8 @@ const router = express.Router();
 
 
 router.post('/', authMiddleware,roleMiddleware("admin","security"), passController.createPass);
+//QRCode verify
+router.get("/verify/:passNumber", authMiddleware, passController.verifyPass);
 router.get('/',authMiddleware,roleMiddleware("admin","security"),passController.getAllPasses);
 
 //serch visitor

@@ -208,6 +208,23 @@ const getExpiredPasses = async(req,res)=>{
     }
 }
 
+const verifyPass = async (req, res) => {
+    try {
+        const pass = await passService.verifyPass(req.params.passNumber);
+
+        res.status(200).json({
+            success: true,
+            message: "Pass verified successfully",
+            data: pass
+        });
+    } catch (error) {
+        res.status(400).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
 module.exports = {
     createPass,
    getAllPasses,
@@ -217,5 +234,6 @@ module.exports = {
     searchPass,
     getPassByNumber,
     getActivePasses ,
-    getExpiredPasses
+    getExpiredPasses,
+    verifyPass
 }

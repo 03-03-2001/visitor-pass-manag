@@ -1,8 +1,35 @@
 const Pass = require("../models/Pass");
+const QRCode = require('qrcode');
+const Visitor = require("../models/Visitor");
+const Appointment = require("../models/Appointment");
 
 
 exports.createPass = async (passData) => {
-    return await Pass.create(passData);
+    const pass = await Pass.create({
+        ...passData,
+      
+        status:"Active"
+    });
+
+
+    //data store in qrcode
+
+
+    const qrData = JSON.stringify({
+        passNumber:pass.passNumber,
+        visitorId: pass.visitor,
+        appointmentId:pass.appointment
+    });
+
+
+    //generate QRcode
+
+    const qrcode = await QRCode.toDataURL(qrData);
+
+    pass.qrCode = qrcode;
+    await pass.save();
+
+    return pass;
 };
 
 
@@ -77,4 +104,29 @@ exports.getExpiredPasses = async () => {
         .populate("visitor", "fullName email phone")
         .populate("appointment")
         .populate("createdBy", "name email role")
+}
+
+
+//verify the QR Code 
+
+exports.verifyPass = async(passNumber)=>{
+    console.log("verifyPass is called with:",passNumber);
+   const pass = await Pass.findOne({ passNumber })
+   .populate('visitor')
+   .populate("appointment")
+   .populate("createdBy","name email");
+
+   if(!pass){
+    throw new Error("Pass not found")
+   }
+
+   if(pass.status!=="Active"){
+    throw new Error("Pass is not active")
+   }
+
+   if(new Date()>pass.expiryAt){
+    throw new Error("Pass has expired")
+   }
+
+   return pass
 }
