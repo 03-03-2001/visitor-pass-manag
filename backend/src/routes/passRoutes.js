@@ -23,6 +23,13 @@ router.get("/expired", authMiddleware,roleMiddleware("admin","security"),passCon
 
 router.get("/number/:passNumber", authMiddleware,roleMiddleware("admin","security"),passController.getPassByNumber);
 
+router.get( "/download/:passNumber", authMiddleware, roleMiddleware("admin", "security", "employee"), passController.downloadPass);
+   
+   
+   
+   
+
+
 
 router.get("/:id", authMiddleware,roleMiddleware("admin","security","employee","visitor"),passController.getPassById);
 

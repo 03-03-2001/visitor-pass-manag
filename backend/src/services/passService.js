@@ -116,6 +116,8 @@ exports.verifyPass = async(passNumber)=>{
    .populate("appointment")
    .populate("createdBy","name email");
 
+   console.log(pass);
+
    if(!pass){
     throw new Error("Pass not found")
    }
@@ -129,4 +131,17 @@ exports.verifyPass = async(passNumber)=>{
    }
 
    return pass
+}
+
+
+exports.downloadPass = async(passNumber)=>{
+     const pass = await Pass.findOne({passNumber})
+     .populate("visitor")
+     .populate("appointment");
+
+     if(!pass){
+        throw new Error("Pass not found");
+     }
+
+     return pass;
 }

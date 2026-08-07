@@ -1,6 +1,7 @@
 
 const { count } = require('node:console');
 const passService = require('../services/passService');
+const pdfService = require("../services/pdfService");
 
 const createPass = async(req,res)=>{
    try {
@@ -225,6 +226,23 @@ const verifyPass = async (req, res) => {
     }
 };
 
+
+const downloadPass = async(req,res)=>{
+     try {
+        const pass = await passService.downloadPass(req.params.passNumber);
+
+        pdfService.generatePassPdf(pass,res)
+     } catch (error) {
+        res.status(404).json({
+            success:false,
+            message:error.message
+        })
+     }
+}
+
+
+
+
 module.exports = {
     createPass,
    getAllPasses,
@@ -235,5 +253,6 @@ module.exports = {
     getPassByNumber,
     getActivePasses ,
     getExpiredPasses,
-    verifyPass
+    verifyPass,
+    downloadPass
 }
