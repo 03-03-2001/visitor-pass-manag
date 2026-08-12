@@ -142,6 +142,9 @@ exports.downloadPass = async(passNumber)=>{
      if(!pass){
         throw new Error("Pass not found");
      }
+     
 
+     console.log("PASS DATA");
+     console.log(JSON.stringify(pass,null,2));
      return pass;
 }

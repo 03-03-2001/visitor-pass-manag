@@ -1,8 +1,8 @@
 
-const { count } = require('node:console');
+
 const passService = require('../services/passService');
 const pdfService = require("../services/pdfService");
-
+const emailService = require('../services/emailService');
 const createPass = async(req,res)=>{
    try {
 
@@ -14,6 +14,9 @@ const createPass = async(req,res)=>{
 
       const pass =  await passService.createPass(passData);
 
+      //create a passPdf
+
+      await pdfService.generatePassPdf(pass);
       res.status(201).json({
         success:true,
         message:"Pass are successfully created",
@@ -160,7 +163,7 @@ const getPassByNumber = async(req,res)=>{
           }
 
           res.status(200).json({
-            success:false,
+            success:true,
             data:pass
           })
 
@@ -231,7 +234,7 @@ const downloadPass = async(req,res)=>{
      try {
         const pass = await passService.downloadPass(req.params.passNumber);
 
-        pdfService.generatePassPdf(pass,res)
+       await pdfService.generatePassPdf(pass,res)
      } catch (error) {
         res.status(404).json({
             success:false,
@@ -240,6 +243,26 @@ const downloadPass = async(req,res)=>{
      }
 }
 
+
+const textEmail = async(req,res)=>{
+    try {
+       const pass = await passService.downloadPass(req.params.passNumber);
+
+        const pdfBuffer =
+            await pdfService.generatePassPdfBuffer(pass);
+       await emailService.sendPassEmail(pass,pdfBuffer);
+       res.status(200).json({
+        success:true,
+        message:"Visitor pass email send successfully"
+       })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success:false,
+            message:error.message
+        })
+    }
+}
 
 
 
@@ -254,5 +277,6 @@ module.exports = {
     getActivePasses ,
     getExpiredPasses,
     verifyPass,
-    downloadPass
+    downloadPass,
+    textEmail
 }
