@@ -4,7 +4,7 @@ const PDFDocument = require("pdfkit");
 // 1. Download PDF
 // ==========================================
 
-exports.generatePassPdf = async (pass) => {
+exports.generatePassPdf = async (pass, res) => {
 
     const doc = new PDFDocument({
         size: "A4",
