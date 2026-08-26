@@ -31,7 +31,7 @@ const Notifications = () => {
     message: "",
   });
 
-
+ 
 
   const fetchNotifications = async () => {
     try {
@@ -57,35 +57,11 @@ const Notifications = () => {
     }
   };
 
-    useEffect(() => {
-    const loadNotifications = async () => {
-      try {
-        setLoading(true);
-        setError("");
-
-        const response = await api.get("/notifications");
-
-        const data = Array.isArray(response.data)
-          ? response.data
-          : response.data.data || [];
-
-        setNotifications(data);
-      } catch (err) {
-        console.error(err);
-
-        setError(
-          err.response?.data?.message ||
-            "Failed to load notifications"
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadNotifications();
+  useEffect(() => {
+    fetchNotifications();
   }, []);
 
- 
+
 
   const handleChange = (e) => {
     setFormData({
@@ -94,6 +70,7 @@ const Notifications = () => {
     });
   };
 
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -143,7 +120,7 @@ const Notifications = () => {
     }
   };
 
- 
+
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
@@ -168,7 +145,7 @@ const Notifications = () => {
     }
   };
 
-  
+ 
 
   const resetForm = () => {
     setFormData({
@@ -181,7 +158,7 @@ const Notifications = () => {
     setShowForm(false);
   };
 
- 
+
 
   const filteredNotifications =
     notifications.filter((notification) => {
@@ -219,7 +196,7 @@ const Notifications = () => {
       );
     });
 
-  
+ 
 
   const getStatusClass = (status) => {
     switch (status) {
@@ -240,7 +217,8 @@ const Notifications = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
 
-    
+     
+
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
 
         <div>
@@ -274,6 +252,7 @@ const Notifications = () => {
       </div>
 
      
+
       {message && (
         <div className="mb-5 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
           {message}
@@ -288,7 +267,7 @@ const Notifications = () => {
         </div>
       )}
 
-      
+     
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
 
@@ -370,12 +349,13 @@ const Notifications = () => {
 
       </div>
 
-     
+    
+
       <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
 
         <div className="flex flex-col md:flex-row gap-4">
 
-         
+       
 
           <div className="relative flex-1">
 
@@ -396,7 +376,7 @@ const Notifications = () => {
 
           </div>
 
-          
+       
 
           <select
             value={typeFilter}
@@ -410,7 +390,7 @@ const Notifications = () => {
             <option value="SMS">SMS</option>
           </select>
 
-         
+        
 
           <select
             value={statusFilter}
@@ -521,7 +501,7 @@ const Notifications = () => {
                       className="border-t hover:bg-gray-50"
                     >
 
-                     
+                      {/* TYPE */}
 
                       <td className="px-6 py-4">
 
@@ -553,19 +533,19 @@ const Notifications = () => {
 
                       </td>
 
-                     
+                    
 
                       <td className="px-6 py-4 text-gray-700">
                         {notification.recipient || "-"}
                       </td>
 
-                     
+                    
 
                       <td className="px-6 py-4 text-gray-700">
                         {notification.subject || "-"}
                       </td>
 
-                     
+                    
 
                       <td className="px-6 py-4">
 
@@ -590,7 +570,7 @@ const Notifications = () => {
 
                       </td>
 
-                    
+                     
 
                       <td className="px-6 py-4 text-gray-600">
 
@@ -602,7 +582,7 @@ const Notifications = () => {
 
                       </td>
 
-                     
+                    
 
                       <td className="px-6 py-4">
 
@@ -658,7 +638,7 @@ const Notifications = () => {
 
       </div>
 
-     
+    
 
       {showForm && (
 
@@ -691,14 +671,14 @@ const Notifications = () => {
 
             </div>
 
-           
+          
 
             <form
               onSubmit={handleSubmit}
               className="p-6 space-y-4"
             >
 
-            
+          
 
               <div>
 
@@ -723,7 +703,7 @@ const Notifications = () => {
 
               </div>
 
-             
+           
 
               <div>
 
@@ -770,8 +750,7 @@ const Notifications = () => {
 
               )}
 
-            
-
+             
               <div>
 
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -790,7 +769,7 @@ const Notifications = () => {
 
               </div>
 
-             
+            
 
               <div className="flex justify-end gap-3 pt-4">
 
